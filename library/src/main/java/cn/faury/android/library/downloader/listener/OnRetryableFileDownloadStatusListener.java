@@ -3,10 +3,16 @@ package cn.faury.android.library.downloader.listener;
 import android.os.Handler;
 import android.os.Looper;
 
-import cn.faury.android.library.downloader.common.DownloadDbFileInfo;
+import cn.faury.android.library.downloader.DownloadFileInfo;
 
 /**
+ * OnRetryableFileDownloadStatusListener
+ * <br/>
  * 文件下载状态改变监听器
+ *
+ * @author wlf(Andy)
+ * @datetime 2016-01-04 11:30 GMT+8
+ * @email 411086563@qq.com
  */
 public interface OnRetryableFileDownloadStatusListener extends OnFileDownloadStatusListener {
 
@@ -16,7 +22,7 @@ public interface OnRetryableFileDownloadStatusListener extends OnFileDownloadSta
      * @param downloadFileInfo download file info
      * @param retryTimes       the times to retry
      */
-    void onFileDownloadStatusRetrying(DownloadDbFileInfo downloadFileInfo, int retryTimes);
+    void onFileDownloadStatusRetrying(DownloadFileInfo downloadFileInfo, int retryTimes);
 
     /**
      * Callback helper for main thread
@@ -28,7 +34,7 @@ public interface OnRetryableFileDownloadStatusListener extends OnFileDownloadSta
          * @param downloadFileInfo download file info
          * @param retryTimes       the times to retry
          */
-        public static void onFileDownloadStatusRetrying(final DownloadDbFileInfo downloadFileInfo, final int 
+        public static void onFileDownloadStatusRetrying(final DownloadFileInfo downloadFileInfo, final int 
                 retryTimes, final OnRetryableFileDownloadStatusListener onRetryableFileDownloadStatusListener) {
             if (onRetryableFileDownloadStatusListener == null) {
                 return;

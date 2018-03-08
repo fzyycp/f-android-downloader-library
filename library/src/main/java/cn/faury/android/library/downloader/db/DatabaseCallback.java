@@ -1,11 +1,14 @@
 package cn.faury.android.library.downloader.db;
 
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 
 /**
- * 数据库回调
+ * database callback, see {@link SQLiteOpenHelper}.onXXXX
+ *
+ * @author wlf(Andy)
+ * @email 411086563@qq.com
  */
-
 public interface DatabaseCallback {
 
     /**
