@@ -21,6 +21,8 @@ import cn.faury.android.library.common.util.UrlUtils;
 import cn.faury.android.library.downloader.DownloadFileInfo.Table;
 import cn.faury.android.library.downloader.base.Status;
 import cn.faury.android.library.downloader.db.ContentDbDao;
+import cn.faury.android.library.downloader.db.sqlite.DatabaseServer;
+import cn.faury.android.library.downloader.db.test.DownloadFileDatabaseBean;
 import cn.faury.android.library.downloader.file_delete.DownloadFileDeleter;
 import cn.faury.android.library.downloader.file_download.DetectUrlFileInfo;
 import cn.faury.android.library.downloader.file_download.base.DownloadRecorder;
@@ -72,7 +74,8 @@ public class DownloadCacher implements DownloadRecorder, DownloadFileMover, Down
      */
     private void initDownloadFileInfoMapFromDb() {
         // read from database
-        ContentDbDao dao = mDownloadFileDbHelper.getContentDbDao(DownloadFileInfo.Table.TABLE_NAME_OF_DOWNLOAD_FILE);
+//        ContentDbDao dao = mDownloadFileDbHelper.getContentDbDao(DownloadFileInfo.Table.TABLE_NAME_OF_DOWNLOAD_FILE);
+        DatabaseServer.getInstance().getDatabase(DownloadFileDatabaseBean.DB_NAME);
         if (dao == null) {
             return;
         }
