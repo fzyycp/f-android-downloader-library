@@ -1,16 +1,10 @@
 package cn.faury.android.library.downloader;
 
-import android.content.Context;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.faury.android.library.common.util.StorageUtils;
 import cn.faury.android.library.downloader.base.Control;
 import cn.faury.android.library.downloader.base.Status;
-import cn.faury.android.library.downloader.db.sqlite.DatabaseServer;
-import cn.faury.android.library.downloader.db.sqlite.bean.AbstractDatabaseBean;
-import cn.faury.android.library.downloader.db.test.DownloadFileDatabaseBean;
 import cn.faury.android.library.downloader.listener.OnDeleteDownloadFileListener;
 import cn.faury.android.library.downloader.listener.OnDeleteDownloadFilesListener;
 import cn.faury.android.library.downloader.listener.OnDetectBigUrlFileListener;
@@ -46,17 +40,9 @@ public final class FileDownloader {
         if (configuration == null) {
             return;
         }
-        final Context context = configuration.getContext();
-        FileDownloadManager.getInstance(context).init(configuration);
-        DatabaseServer.register(context, new DatabaseServer.OnInitDatabaseListener() {
-            @Override
-            public List<AbstractDatabaseBean> getInitDatabases() {
-                DownloadFileDatabaseBean dao = new DownloadFileDatabaseBean(StorageUtils.getStoragePackageDir(context));
-                List<AbstractDatabaseBean> lst = new ArrayList<>();
-                lst.add(dao);
-                return lst;
-            }
-        });
+//        final Context context = configuration.getContext();
+        FileDownloadManager.getInstanceAndInit(configuration);
+//        FileDownloadManager.getInstance(context).init(configuration);
     }
 
     /**
@@ -92,7 +78,8 @@ public final class FileDownloader {
             throw new IllegalStateException("Please init the file-downloader by using " + FileDownloader.class
                     .getName() + ".init(FileDownloadConfiguration) !");
         }
-        return FileDownloadManager.getInstance(FileDownloadManager.getFileDownloadConfiguration().getContext());
+        return FileDownloadManager.getInstance();
+//        return FileDownloadManager.getInstance(FileDownloadManager.getFileDownloadConfiguration().getContext());
     }
 
     /**

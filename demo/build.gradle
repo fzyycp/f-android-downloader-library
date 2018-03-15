@@ -6,7 +6,7 @@ android {
 
 
     defaultConfig {
-        applicationId "cn.faury.downloaderdemo"
+        applicationId "cn.faury.android.demo.downloader"
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
@@ -26,6 +26,6 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    implementation 'cn.faury.android.library:f-android-common-library:0.1.1'
+    implementation 'cn.faury.android.library:f-android-common-library:0.1.9'
     implementation project(':library')
 }

@@ -1,7 +1,5 @@
 package cn.faury.android.library.downloader;
 
-import android.content.Context;
-
 import java.util.List;
 
 import cn.faury.android.library.common.helper.Logger;
@@ -30,10 +28,8 @@ import cn.faury.android.library.downloader.util.DownloadFileUtil;
  * 文件下载管理器
  *
  * @author wlf
- * @deprecated use {@link FileDownloader} instead
  */
-@Deprecated
-public final class FileDownloadManager {
+final class FileDownloadManager {
 
     private static final String TAG = FileDownloadManager.class.getName();
     /**
@@ -76,12 +72,12 @@ public final class FileDownloadManager {
     // --------------------------------------lifecycle & others--------------------------------------
 
     //  constructor of FileDownloadManager, private only
-    private FileDownloadManager(Context context) {
+    private FileDownloadManager(FileDownloadConfiguration configuration) {
 
-        Context appContext = context.getApplicationContext();
+//        Context appContext = configuration.getContext().getApplicationContext();
 
         // init DownloadFileCacher
-        mDownloadFileCacher = new DownloadCacher(appContext);
+        mDownloadFileCacher = new DownloadCacher(configuration);
 
         // check the download status, if there is an exception status, try to recover it
         checkAndRecoveryExceptionStatus(getDownloadFiles());
@@ -90,14 +86,24 @@ public final class FileDownloadManager {
     /**
      * get FileDownloadManager single instance
      *
-     * @param context Context
      * @return the FileDownloadManager single instance
      */
-    public static FileDownloadManager getInstance(Context context) {
+    public static FileDownloadManager getInstance() {
+        return sInstance;
+    }
+
+    /**
+     * 获取单例，并初始化
+     *
+     * @param configuration 配置信息
+     * @return the FileDownloadManager single instance
+     */
+    public static FileDownloadManager getInstanceAndInit(FileDownloadConfiguration configuration) {
         if (sInstance == null) {
             synchronized (FileDownloadManager.class) {
                 if (sInstance == null) {
-                    sInstance = new FileDownloadManager(context);
+                    sInstance = new FileDownloadManager(configuration);
+                    sInstance.init(configuration);
                 }
             }
         }

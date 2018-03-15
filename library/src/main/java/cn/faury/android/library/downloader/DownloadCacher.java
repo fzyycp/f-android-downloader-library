@@ -15,14 +15,15 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import cn.faury.android.library.common.helper.Logger;
+import cn.faury.android.library.common.sqlite.DatabaseManager;
+import cn.faury.android.library.common.sqlite.dao.BaseDatabaseDao;
 import cn.faury.android.library.common.util.CollectionsUtils;
 import cn.faury.android.library.common.util.FileUtils;
 import cn.faury.android.library.common.util.UrlUtils;
 import cn.faury.android.library.downloader.DownloadFileInfo.Table;
 import cn.faury.android.library.downloader.base.Status;
-import cn.faury.android.library.downloader.db.ContentDbDao;
-import cn.faury.android.library.downloader.db.sqlite.DatabaseServer;
-import cn.faury.android.library.downloader.db.test.DownloadFileDatabaseBean;
+import cn.faury.android.library.downloader.db.storage.DownloadDatabaseDao;
+import cn.faury.android.library.downloader.db.storage.DownloadTableDao;
 import cn.faury.android.library.downloader.file_delete.DownloadFileDeleter;
 import cn.faury.android.library.downloader.file_download.DetectUrlFileInfo;
 import cn.faury.android.library.downloader.file_download.base.DownloadRecorder;
@@ -47,7 +48,7 @@ public class DownloadCacher implements DownloadRecorder, DownloadFileMover, Down
 
     // db helper
     private DownloadFileDbHelper mDownloadFileDbHelper;
-
+    private DatabaseManager databaseManager;
     // download files memory cache
     private Map<String, DownloadFileInfo> mDownloadFileInfoMap = new HashMap<>();
 
@@ -61,11 +62,16 @@ public class DownloadCacher implements DownloadRecorder, DownloadFileMover, Down
     /**
      * constructor of DownloadFileCacher
      *
-     * @param context Context
+     * @param configuration 配置信息
      */
-    DownloadCacher(Context context) {
-        mDownloadFileDbHelper = new DownloadFileDbHelper(context);
+    DownloadCacher(FileDownloadConfiguration configuration) {
+        Context context = configuration.getContext();
+//        mDownloadFileDbHelper = new DownloadFileDbHelper(context);
         mDownloadFileChangeObserver = new DownloadFileChangeObserver();
+        databaseManager = (new DatabaseManager.Builder(context))
+                .configDatabase(new DownloadDatabaseDao(context,configuration.getFileDownloadDir()))
+                .configDir(configuration.getFileDownloadDir())
+                .build();
         initDownloadFileInfoMapFromDb();
     }
 
@@ -74,8 +80,9 @@ public class DownloadCacher implements DownloadRecorder, DownloadFileMover, Down
      */
     private void initDownloadFileInfoMapFromDb() {
         // read from database
-//        ContentDbDao dao = mDownloadFileDbHelper.getContentDbDao(DownloadFileInfo.Table.TABLE_NAME_OF_DOWNLOAD_FILE);
-        DatabaseServer.getInstance().getDatabase(DownloadFileDatabaseBean.DB_NAME);
+// TODO:        ContentDbDao dao = mDownloadFileDbHelper.getContentDbDao(DownloadFileInfo.Table.TABLE_NAME_OF_DOWNLOAD_FILE);
+        BaseDatabaseDao dbDao = databaseManager.getDatabaseDao(DownloadDatabaseDao.DB_NAME);
+        DownloadTableDao dao = dbDao.getTableDao(DownloadTableDao.TABLE_NAME);
         if (dao == null) {
             return;
         }
@@ -283,7 +290,9 @@ public class DownloadCacher implements DownloadRecorder, DownloadFileMover, Down
             return false;
         }
 
-        ContentDbDao dao = mDownloadFileDbHelper.getContentDbDao(DownloadFileInfo.Table.TABLE_NAME_OF_DOWNLOAD_FILE);
+// TODO:       ContentDbDao dao = mDownloadFileDbHelper.getContentDbDao(DownloadFileInfo.Table.TABLE_NAME_OF_DOWNLOAD_FILE);
+        BaseDatabaseDao dbDao = databaseManager.getDatabaseDao(DownloadDatabaseDao.DB_NAME);
+        DownloadTableDao dao = dbDao.getTableDao(DownloadTableDao.TABLE_NAME);
         if (dao == null) {
             return false;
         }
@@ -363,7 +372,9 @@ public class DownloadCacher implements DownloadRecorder, DownloadFileMover, Down
             return false;
         }
 
-        ContentDbDao dao = mDownloadFileDbHelper.getContentDbDao(DownloadFileInfo.Table.TABLE_NAME_OF_DOWNLOAD_FILE);
+// TODO:        ContentDbDao dao = mDownloadFileDbHelper.getContentDbDao(DownloadFileInfo.Table.TABLE_NAME_OF_DOWNLOAD_FILE);
+        BaseDatabaseDao dbDao = databaseManager.getDatabaseDao(DownloadDatabaseDao.DB_NAME);
+        DownloadTableDao dao = dbDao.getTableDao(DownloadTableDao.TABLE_NAME);
         if (dao == null) {
             return false;
         }
@@ -438,7 +449,9 @@ public class DownloadCacher implements DownloadRecorder, DownloadFileMover, Down
             return false;
         }
 
-        ContentDbDao dao = mDownloadFileDbHelper.getContentDbDao(DownloadFileInfo.Table.TABLE_NAME_OF_DOWNLOAD_FILE);
+// TODO:        ContentDbDao dao = mDownloadFileDbHelper.getContentDbDao(DownloadFileInfo.Table.TABLE_NAME_OF_DOWNLOAD_FILE);
+        BaseDatabaseDao dbDao = databaseManager.getDatabaseDao(DownloadDatabaseDao.DB_NAME);
+        DownloadTableDao dao = dbDao.getTableDao(DownloadTableDao.TABLE_NAME);
         if (dao == null) {
             return false;
         }
@@ -515,8 +528,10 @@ public class DownloadCacher implements DownloadRecorder, DownloadFileMover, Down
         // find in memory cache
         if (downloadFileInfo == null) {
             // try to find in database
-            ContentDbDao dao = mDownloadFileDbHelper.getContentDbDao(DownloadFileInfo.Table
-                    .TABLE_NAME_OF_DOWNLOAD_FILE);
+//TODO:            ContentDbDao dao = mDownloadFileDbHelper.getContentDbDao(DownloadFileInfo.Table
+//                    .TABLE_NAME_OF_DOWNLOAD_FILE);
+            BaseDatabaseDao dbDao = databaseManager.getDatabaseDao(DownloadDatabaseDao.DB_NAME);
+            DownloadTableDao dao = dbDao.getTableDao(DownloadTableDao.TABLE_NAME);
             if (dao == null) {
                 return null;
             }
@@ -621,8 +636,10 @@ public class DownloadCacher implements DownloadRecorder, DownloadFileMover, Down
             downloadFileInfo = mDownloadFileInfoMap.get(url);
         } else {
             // find in database
-            ContentDbDao dao = mDownloadFileDbHelper.getContentDbDao(DownloadFileInfo.Table
-                    .TABLE_NAME_OF_DOWNLOAD_FILE);
+// TODO:           ContentDbDao dao = mDownloadFileDbHelper.getContentDbDao(DownloadFileInfo.Table
+//                    .TABLE_NAME_OF_DOWNLOAD_FILE);
+            BaseDatabaseDao dbDao = databaseManager.getDatabaseDao(DownloadDatabaseDao.DB_NAME);
+            DownloadTableDao dao = dbDao.getTableDao(DownloadTableDao.TABLE_NAME);
             if (dao == null) {
                 return null;
             }
