@@ -23,7 +23,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     // 通用库
-    implementation 'cn.faury.android.library:f-android-common-library:0.1.9'
+    implementation 'cn.faury.android.library:f-android-common-library:0.2.0'
 
 }
 

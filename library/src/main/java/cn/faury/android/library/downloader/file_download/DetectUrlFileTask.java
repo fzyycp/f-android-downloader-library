@@ -48,7 +48,7 @@ class DetectUrlFileTask implements Runnable {
 
     private ExecutorService mCloseConnectionEngine;// engine use for closing the http connection
 
-    public DetectUrlFileTask(String url, String downloadSaveDir, DetectUrlFileCacher detectUrlFileCacher, 
+    public DetectUrlFileTask(String url, String downloadSaveDir, DetectUrlFileCacher detectUrlFileCacher,
                              DownloadRecorder downloadRecorder) {
         super();
         this.mUrl = url;
@@ -170,7 +170,7 @@ class DetectUrlFileTask implements Runnable {
 
             if (redirectCount > MAX_REDIRECT_TIMES) {
                 // error over max redirect
-                failReason = new DetectUrlFileFailReason(mUrl, "over max redirect:" + MAX_REDIRECT_TIMES + "!", 
+                failReason = new DetectUrlFileFailReason(mUrl, "over max redirect:" + MAX_REDIRECT_TIMES + "!",
                         DetectUrlFileFailReason.TYPE_URL_OVER_REDIRECT_COUNT);
                 // goto finally, over redirect limit error
                 return;
@@ -211,7 +211,7 @@ class DetectUrlFileTask implements Runnable {
                     }
 
                     if (fileSize > 0) {
-                        detectUrlFileInfo = new DetectUrlFileInfo(mUrl, fileSize, eTag, lastModified, 
+                        detectUrlFileInfo = new DetectUrlFileInfo(mUrl, fileSize, eTag, lastModified,
                                 acceptRangeType, mDownloadSaveDir, fileName);
                         // add or update to memory cache
                         mDetectUrlFileCacher.addOrUpdateDetectUrlFile(detectUrlFileInfo);
@@ -222,7 +222,7 @@ class DetectUrlFileTask implements Runnable {
                 // 404 not found
                 case HttpURLConnection.HTTP_NOT_FOUND:
                     // error url file does not exist
-                    failReason = new DetectUrlFileFailReason(mUrl, "url file does not exist !", 
+                    failReason = new DetectUrlFileFailReason(mUrl, "url file does not exist !",
                             DetectUrlFileFailReason.TYPE_HTTP_FILE_NOT_EXIST);
                     break;
                 // other, ResponseCode error
@@ -270,7 +270,7 @@ class DetectUrlFileTask implements Runnable {
 
                 if (!isNotify) {
                     if (failReason == null) {
-                        failReason = new DetectUrlFileFailReason(mUrl, "the file need to download may not access !", 
+                        failReason = new DetectUrlFileFailReason(mUrl, "the file need to download may not access !",
                                 DetectUrlFileFailReason.TYPE_UNKNOWN);
                     }
                     // error occur
